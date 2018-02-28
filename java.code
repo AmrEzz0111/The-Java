@@ -1,0 +1,125 @@
+package com.example.amrezz.newjustjava;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.net.URI;
+
+
+public class JustJava extends AppCompatActivity {
+
+    CheckBox checkBoxWhippedCream;
+    CheckBox checkBoxChocolate;
+
+
+    int price;
+    int quantity = 0;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_just_java);
+    }
+
+    /**
+     * This method is called when the order button is clicked.
+     */
+    public void submitOrder(View view) {
+
+        checkBoxWhippedCream = findViewById(R.id.whipped_cream);
+        boolean isCream = checkBoxWhippedCream.isChecked();
+
+
+        checkBoxChocolate = findViewById(R.id.chochlet);
+        boolean isChocolate = checkBoxChocolate.isChecked();
+
+        EditText name = findViewById(R.id.name);
+        Editable yourName = name.getText();
+
+
+         price = calculatePrice(isCream, isChocolate);
+        String priceMessage = createOrderSummary(quantity, isCream, isChocolate, yourName);
+
+
+//        Intent intent = new Intent(Intent.ACTION_SENDTO);
+//        intent.setData(Uri.parse("mailto:"));
+//        intent.putExtra(Intent.EXTRA_SUBJECT, "Amr Ezz" );
+//        intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
+//        if (intent.resolveActivity(getPackageManager()) != null) {
+//            startActivity(intent);
+//        }
+
+        displayMessage(priceMessage);
+    }
+
+
+    public void increment(View view) {
+        if (quantity < 30) {
+            quantity += 1;
+            displayQuantity(quantity);
+        }
+    }
+
+    /**
+     * This method displays the given quantity value on the screen.
+     */
+    private void displayQuantity(int number) {
+        TextView quantityTextView = findViewById(R.id.quantity_text_view);
+        quantityTextView.setText("" + number);
+    }
+
+    public void decrement(View view) {
+        if (quantity >= 1) {
+            quantity += -1;
+            displayQuantity(quantity);
+        }
+    }
+
+
+    /**
+     * This method displays the given text on the screen.
+     */
+    private void displayMessage(String message) {
+        TextView summaryTextView = findViewById(R.id.summary_text_view);
+        summaryTextView.setText(message);
+    }
+
+    private int calculatePrice(boolean isCream, boolean isChocolate) {
+        int basePrice = 5;
+        int cream = 1;
+        int chocolate = 2;
+
+        if (isCream) {
+            basePrice += cream;
+        }
+        if (isChocolate) {
+            basePrice += chocolate;
+        }
+
+        return price = basePrice * quantity;
+
+    }
+
+
+    private String createOrderSummary(int number, boolean addWhippedCream, boolean addChocolate, Editable yourName) {
+
+
+        String priceMessage = "Name : " + yourName;
+        priceMessage += "\nQuantity : " + quantity;
+        priceMessage += "\nAdded cream : " + addWhippedCream;
+        priceMessage += "\nAdded chocolate : " + addChocolate;
+        priceMessage += "\nTotal Price : $" + price;
+        priceMessage += "\nThank You!";
+
+        return priceMessage;
+    }
+
+}
